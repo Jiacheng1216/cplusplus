@@ -1,5 +1,5 @@
 # jetson-nano-dofbot
-註冊完帳號登入後可進行機械手臂的操作
+註冊完帳號登入後可進行機械手臂的操作  
 <img width="192" alt="image" src="https://user-images.githubusercontent.com/88382512/168276189-19f4d329-999c-4016-9d55-44fb51487c51.png">  
 註冊頁面  
 <img width="191" alt="image" src="https://user-images.githubusercontent.com/88382512/168276227-38fe175e-3bed-415f-945a-b908ace40f49.png">  
