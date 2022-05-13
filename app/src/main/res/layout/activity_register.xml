@@ -4,44 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".RegisterActivity">
 
     <EditText
         android:id="@+id/account"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
-        android:ems="10"
-        android:hint="請輸入帳號"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="10dp"
+        android:background="#30ffffff"
+        android:drawableLeft="@drawable/ic_baseline_person_24"
+        android:drawablePadding="20dp"
+        android:hint="username"
         android:inputType="textPersonName"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:ems="10"
-        android:hint="請輸入密碼"
-        android:inputType="textPersonName"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="#30ffffff"
+        android:drawableLeft="@drawable/ic_baseline_key_24"
+        android:drawablePadding="20dp"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/account" />
 
     <EditText
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
+        android:id="@+id/checkpassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:ems="10"
-        android:hint="輸入電子信箱"
-        android:inputType="textPersonName"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="#30ffffff"
+        android:drawableLeft="@drawable/ic_baseline_key_24"
+        android:drawablePadding="20dp"
+        android:hint="Enter the password again"
+        android:inputType="textPassword"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
 
@@ -49,31 +68,67 @@
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
         android:text="註冊"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
-    <Button
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="#30ffffff"
+        android:drawableLeft="@drawable/ic_baseline_email_24"
+        android:drawablePadding="20dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkpassword" />
+
+    <TextView
         android:id="@+id/registerBackToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="52dp"
-        android:text="返回"
+        android:layout_marginStart="10dp"
+        android:text="取消"
+        android:textColor="@color/white"
+        android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/respon"
-        android:layout_width="253dp"
-        android:layout_height="124dp"
-        android:layout_marginTop="32dp"
-        android:textSize="34sp"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="413dp"
+        android:layout_height="107dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.187"
-        app:layout_constraintStart_toEndOf="@+id/registerBackToLogin"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email">
+
+        <ImageView
+            android:id="@+id/checkBox"
+            android:layout_width="6dp"
+            android:layout_height="65dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_check_box_outline_blank_24" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="140dp"
+            android:layout_height="65dp"
+            android:layout_weight="1"
+            android:text="我不是機器人"
+            android:textSize="40sp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

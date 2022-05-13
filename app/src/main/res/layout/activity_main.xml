@@ -5,111 +5,89 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/connection"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/head"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="99dp"
-        android:layout_marginTop="99dp"
-        android:text="連線"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/disconnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="99dp"
-        android:layout_marginEnd="99dp"
-        android:text="中斷連線"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/LoginPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.771"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LoginAccount" />
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:text="歡迎使用智慧家庭"
+        android:textColor="@color/white"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="49dp" />
 
     <EditText
         android:id="@+id/LoginAccount"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:ems="10"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="10dp"
+        android:background="#30ffffff"
+        android:drawableLeft="@drawable/ic_baseline_email_24"
+        android:drawablePadding="20dp"
+        android:hint="Email"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.766"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connection" />
-
-    <TextView
-        android:id="@+id/connectStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:textSize="24sp"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/head" />
 
-    <Button
-        android:id="@+id/startArm"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/LoginPassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="4dp"
-        android:text="開始控制手臂"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_margin="10dp"
+        android:background="#30ffffff"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="20dp"
+        android:drawableLeft="@drawable/ic_baseline_key_24"
+        android:drawablePadding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/LoginAccount" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signIn"
-        android:layout_width="143dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:text="sign in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUp" />
-
-    <Button
-        android:id="@+id/signUp"
-        android:layout_width="138dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="20dp"
-        android:text="sign up"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LoginPassword" />
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="105dp"
-        android:layout_height="40dp"
-        android:hint="Account:"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/LoginAccount"
+        android:id="@+id/signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="沒有帳戶嗎?註冊一個"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/LoginAccount" />
+        app:layout_constraintTop_toBottomOf="@+id/signIn" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="107dp"
-        android:layout_height="39dp"
-        android:hint="Password:"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/LoginPassword"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="資料庫測試"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/LoginPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/signUp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

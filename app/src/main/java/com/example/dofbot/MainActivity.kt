@@ -1,14 +1,15 @@
 package com.example.dofbot
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.*
-import com.google.gson.Gson
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -16,211 +17,171 @@ import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 
 var connectSuccess = false
-private lateinit var mqttClient: MqttAndroidClient
-val topic = "NTUT/MQTT"
-class MainActivity : AppCompatActivity() {
-    private lateinit var connection:Button
-    private lateinit var connectStatus :TextView
-    private lateinit var startArm: Button
-    private lateinit var signUp:Button
 
-    // TAG
-    companion object {
-        const val TAG = "AndroidMqttClient"
-    }
+const val topic = "NTUT/MQTT"
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var dbrw: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val LoginAccount = findViewById<EditText>(R.id.LoginAccount)
-        val LoginPassword = findViewById<EditText>(R.id.LoginPassword)
-        val connectStatus = findViewById<TextView>(R.id.connectStatus)
-        val loginIntent = Intent(this,UserActivity::class.java)
+        val loginAccount = findViewById<EditText>(R.id.LoginAccount)
+        val loginPassword = findViewById<EditText>(R.id.LoginPassword)
+        val signUp = findViewById<TextView>(R.id.signUp)
+        val signIn = findViewById<Button>(R.id.signIn)
+        val button = findViewById<Button>(R.id.button)
 
-        val signUp = findViewById<Button>(R.id.signUp)
+        //取得資料庫實體
+        dbrw = Database(this,"TOKEN").writableDatabase
+
+        //資料庫測試
+        button.setOnClickListener {
+            startActivity(Intent(this,DataBaseTest::class.java))
+        }
+
+        //登錄成功，切換到用戶介面
+        fun loginSuccess(id: ArrayList<String>, name: ArrayList<String>){
+            //將id跟name跟email打包並傳給UserActivity
+            val b = Bundle()
+            //id跟name為陣列形式
+            b.putStringArrayList("id", ArrayList(id))
+            b.putStringArrayList("name", ArrayList(name))
+            //將email傳給UserActivity做全域變數
+            b.putString("LoginEmail",loginAccount.text.toString())
+
+            val loginIntent = Intent(this,UserActivity::class.java)
+            startActivity(loginIntent.putExtras(b))
+            showToast("登錄成功!")
+        }
+
+        //403登錄失敗，跳到驗證畫面
+        fun unAuthentication(verity: String){
+            val authenticationIntent = Intent(this,Authentication::class.java)
+            authenticationIntent.putExtra("EMAIL",loginAccount.text.toString())
+            authenticationIntent.putExtra("_id",verity)
+            startActivity(authenticationIntent)
+            showToast("請先通過Email驗證")
+        }
+
+        //註冊
         signUp.setOnClickListener {
             startActivity(Intent(this,RegisterActivity::class.java))
         }
-        val signIn = findViewById<Button>(R.id.signIn)
+        //登錄
         signIn.setOnClickListener {
-            val type = "application/json; charset=utf-8".toMediaTypeOrNull()
-            val param = "{\"email\" : \"${LoginAccount.text}\" , \"password\" : \"${LoginPassword.text}\"}"
-            val body = param.toRequestBody(type)
+            when{
+                //檢查輸入是否為空
+                loginAccount.length() < 1 -> showToast("請輸入Email")
+                loginPassword.length() < 1 -> showToast("請輸入密碼")
+                else -> {
+                    val type = "application/json; charset=utf-8".toMediaTypeOrNull()
+                    val param =
+                        "{\"email\" : \"${loginAccount.text}\" ," +
+                        " \"password\" : \"${loginPassword.text}\"}"
+                    val body = param.toRequestBody(type)
 
-            val Url = "http://35.77.46.57:3000/user/login"
-            val req = Request.Builder().url(Url).post(body).build()
+                    val url = "http://35.77.46.57:3000/user/login"
+                    val req = Request.Builder().url(url).post(body).build()
 
-            OkHttpClient().newCall(req).enqueue(object :Callback{
-                override fun onResponse(call: Call, response: Response) {
-                    val res = response.body?.string()
-                    val json = JSONObject(res.toString())
+                    OkHttpClient().newCall(req).enqueue(object : Callback {
+                        override fun onResponse(call: Call, response: Response) {
+                            val res = response.body?.string()
+                            val json = JSONObject(res.toString())
 
-                    val headData = response.headers //取得server的token值
-                    val token = headData.get("token").toString() //儲存token值成變數
-                    val settings = getSharedPreferences("token",0)  //儲存token到SharedPreferences
-                    settings.edit().putString("TOKEN", token).apply()
-                    val readtoken = getSharedPreferences("token",0)
+                            if(json.has("data")){
+                                //從server回傳的home name id紀錄 打包傳送到UserActivity
+                                val data = json.getJSONObject("data")
 
-                    when(json.getInt("status")){
-                        200 -> startActivity(loginIntent)
-                    }
+                                if (data.has("homes")){
+                                    val homes = data.getJSONArray("homes")
+                                    var name = ""
+                                    var id = ""
 
-                    Log.e("token","${readtoken.getString("TOKEN", "")}")
-                    Log.e("321","$json")
+                                    //取得server的token值
+                                    val headData = response.headers
+                                    //儲存token值成變數
+                                    val token = headData.get("token").toString()
+
+                                    val c = dbrw.rawQuery(
+                                        "SELECT * FROM tokenList WHERE email LIKE '${loginAccount.text}'",
+                                        null)
+                                    //從第一筆開始搜尋
+                                    c.moveToFirst()
+
+                                    when (json.getInt("status")) {
+                                        200 -> {
+                                            //如果資料庫都沒有資料
+                                            if(c.count == 0){
+                                                //將email和token值新增到資料庫
+                                                dbrw.execSQL(
+                                                    "INSERT INTO tokenList(email,token) VALUES('${loginAccount.text}','$token')",
+                                                )
+                                            }
+                                            //如果資料庫有資料但是沒有該email資料
+                                            else if(c.getString(0) != loginAccount.text.toString()) {
+                                                //將email和token值新增到資料庫
+                                                dbrw.execSQL(
+                                                    "INSERT INTO tokenList(email,token) VALUES('${loginAccount.text}','$token')",
+                                                )
+                                            }else
+                                            {
+                                                //登錄後更新token值
+                                                dbrw.execSQL("UPDATE tokenList SET token = '$token' WHERE email LIKE '${loginAccount.text}'")
+                                            }
+                                            //取得陣列元素數量
+                                            val indexNumber = homes.length()-1
+                                            //建立name和id的陣列
+                                            val nameArray :ArrayList<String> = ArrayList()
+                                            val idArray :ArrayList<String> = ArrayList()
+                                            //依序存取各個家庭
+                                            for(i in 0..indexNumber){
+                                                val objecttt = homes.getJSONObject(i)
+                                                //拆解後取得name和id，並依序加到陣列裡
+                                                name = objecttt.getString("name")
+                                                nameArray.add(name)
+                                                id = objecttt.getString("_id")
+                                                idArray.add(id)
+                                            }
+                                            //將完成的陣列作為引數並傳遞給函數做參數
+                                            loginSuccess(idArray,nameArray)
+                                            Log.e("data", "${json.getJSONObject("data")}")
+                                        }
+                                    }
+                                }else if(data.has("_id")){
+                                    when(json.getInt("status")){
+                                        401 -> showToast("錯誤的email或密碼")
+                                        //未驗證，跳到驗證畫面
+                                        403 -> {
+                                            unAuthentication(data.getString("_id"))
+                                        }
+                                    }
+
+                                    Log.e("SERVER", "$json")
+                                }
+                            }
+                            //Log.e("token", token)
+                        }
+
+                        override fun onFailure(call: Call, e: IOException) {
+                            showToast("server沒有回應")
+                        }
+                    })
                 }
-
-                override fun onFailure(call: Call, e: IOException) {
-
-                }
-            })
-        }
-
-        val connection = findViewById<Button>(R.id.connection)  //連線
-        connection.setOnClickListener {
-            connect(this , connectStatus )
-            connectStatus.text = "連線中..."
-        }
-
-        val startArm = findViewById<Button>(R.id.startArm)
-        startArm.setOnClickListener {
-            if (connectSuccess == true){
-                startActivity(Intent(this, ControlArm::class.java))
-            }else{
-                connectStatus.text = "還沒連線"
             }
         }
-
-        val disconnect = findViewById<Button>(R.id.disconnect)  //中斷連線
-        disconnect.setOnClickListener {
-            disconnect(connectStatus)
-        }
-
-
 
     }
 
-    /* fun getCode() {  //取得二維碼
-         val SSIDView = findViewById<EditText>(R.id.SSIDView) //輸入WIFI SSID
-         val KEYView = findViewById<EditText>(R.id.KEYView)   //輸入密碼
-         val imageView = findViewById<ImageView>(R.id.imageView) //二維碼容器
-         val WPA_WPA2_WPA3 = findViewById<RadioButton>(R.id.WPA_WPA2_WPA3)
-         val WEP = findViewById<RadioButton>(R.id.WEP)
-
-         val Encryption = when {
-             WPA_WPA2_WPA3.isChecked -> "WPA"
-             WEP.isChecked -> "WEP"
-             else -> ""
-         }
-
-         val BarcodeEncoder = BarcodeEncoder()  //轉換的方法
-         val content = "WIFI:S:${SSIDView.text};T:$Encryption;P:${KEYView.text};" //二維碼內容
-         val bitmap = BarcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 512, 512)
-
-         imageView.setImageBitmap(bitmap)
-     }*/
-    private fun showToast(msg: String) =
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
-}
-
-
-
-fun connect(context: Context ,
-            connectStatus: TextView , ) :Boolean{
-    val serverURI = "tcp://140.124.73.217:1883"
-    mqttClient = MqttAndroidClient(context, serverURI, "NTUT")
-    mqttClient.setCallback(object : MqttCallback {
-        override fun messageArrived(topic: String?, message: MqttMessage?) {
-            Log.e(MainActivity.TAG, "Receive message: ${message.toString()} from topic: $topic")
-
+    fun showToast(msg: String) {
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
-
-        override fun connectionLost(cause: Throwable?) {
-            Log.d(MainActivity.TAG, "Connection lost ${cause.toString()}")
-        }
-
-        override fun deliveryComplete(token: IMqttDeliveryToken?) {
-
-        }
-    })
-    val options = MqttConnectOptions()
-    try {
-        mqttClient.connect(options, null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d(MainActivity.TAG, "Connection success")
-                connectStatus.text = "連線成功"
-                connectSuccess = true
-            }
-
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.d(MainActivity.TAG, "Connection failure")
-                connectStatus.text = "連線失敗"
-                connectSuccess = false
-            }
-        })
-    } catch (e: MqttException) {
-        e.printStackTrace()
-    };return connectSuccess
-}
-
-fun disconnect(connectStatus: TextView) :Boolean{
-    try {
-        mqttClient.disconnect(null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                connectStatus.text = "中斷連線"
-                Log.d(MainActivity.TAG, "Disconnected")
-                connectSuccess = false
-            }
-
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.d(MainActivity.TAG, "Failed to disconnect")
-            }
-        })
-    } catch (e: MqttException) {
-        e.printStackTrace()
-    };return connectSuccess
-}
-
-fun subscribe(topic: String, subscribeView:TextView, qos: Int = 1,) {
-    try {
-        mqttClient.subscribe(topic, qos, null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d(MainActivity.TAG, "Subscribed to $topic")
-                subscribeView.text = "訂閱主題: $topic"
-            }
-
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.d(MainActivity.TAG, "Failed to subscribe $topic")
-            }
-        })
-    } catch (e: MqttException) {
-       // Toast.makeText(this,"還沒訂閱",Toast.LENGTH_SHORT).show()
-        e.printStackTrace()
     }
 }
 
-fun publish(topic: String, msg: String, qos: Int = 1, retained: Boolean = false) {
-    try {
-        val message = MqttMessage()
-        message.payload = msg.toByteArray()
-        message.qos = qos
-        message.isRetained = retained
-        mqttClient.publish(topic, message, null, object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d(MainActivity.TAG, "$msg published to $topic")
-            }
 
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.d(MainActivity.TAG, "Failed to publish $msg to $topic")
-            }
-        })
-    } catch (e: MqttException) {
-        e.printStackTrace()
-    }
-
-
-}
 

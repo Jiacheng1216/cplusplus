@@ -4,43 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".UserActivity">
 
-    <Button
-        android:id="@+id/createHome"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginBottom="100dp"
-        android:text="新增家庭"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/joinHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="116dp"
-        android:layout_marginBottom="100dp"
-        android:text="加入家庭"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginTop="10dp"
+        android:text="家庭列表"
+        android:textColor="@color/white"
+        android:textSize="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/homeView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/createHome"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView4" />
 
-    <ImageView
-        android:id="@+id/setting"
-        android:layout_width="54dp"
-        android:layout_height="52dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="96dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="412dp"
+        android:layout_height="153dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/setting" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/createHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新增家庭"
+            app:layout_constraintEnd_toStartOf="@+id/joinHome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/joinHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="36dp"
+            android:text="加入家庭"
+            app:layout_constraintEnd_toStartOf="@+id/setting"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/setting"
+            android:layout_width="54dp"
+            android:layout_height="52dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/setting" />
+
+        <ImageView
+            android:id="@+id/connect"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_baseline_wifi_24" />
+
+        <ImageView
+            android:id="@+id/disconnection"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/controlArm"
+            app:layout_constraintStart_toEndOf="@+id/connect"
+            app:srcCompat="@drawable/disconnection" />
+
+        <ImageView
+            android:id="@+id/controlArm"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:background="@color/zxing_transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@mipmap/armicon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

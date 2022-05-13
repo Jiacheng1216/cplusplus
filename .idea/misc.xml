@@ -3,15 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/edittext_bg.xml" value="0.10520833333333333" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/edittext_setting.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.10462962962962963" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/ic_baseline_check_box_24.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/ic_baseline_check_box_outline_blank_24.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/ic_baseline_wifi_24.xml" value="0.17777777777777778" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/ic_baseline_wifi_off_24.xml" value="0.11481481481481481" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/ic_launcher_background.xml" value="0.19166666666666668" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/drawable/list.xml" value="0.10277777777777777" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_authentication.xml" value="0.22" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_control_arm.xml" value="0.22" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_data_base_test.xml" value="0.22" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_modify_password.xml" value="0.1" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_modify_password.xml" value="0.22" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_register.xml" value="0.22" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/activity_user.xml" value="0.22" />
-        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/homeview.xml" value="0.22" />
+        <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/homeview.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/user_createhome.xml" value="0.22" />
         <entry key="..\:/Users/jkllu/AndroidStudioProjects/Dofbot/app/src/main/res/layout/user_joinhome.xml" value="0.22" />
       </map>

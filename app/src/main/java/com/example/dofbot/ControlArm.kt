@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.platform.android.AndroidLogHandler.publish
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.json.JSONObject
 
@@ -22,6 +23,8 @@ lateinit var angleView:TextView
 
 
 class ControlArm : AppCompatActivity() {
+    val mqtt = MQTT()
+
     var angle1 = 90
     var angle1max = 180
     var angle2 = 90
@@ -52,11 +55,6 @@ class ControlArm : AppCompatActivity() {
         var id = 0
         val angleSeekbar = angleSeekbar(angleView , id)
 
-        val back = findViewById<Button>(R.id.back)
-        back.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
-        }
-
         val rightButton = findViewById<Button>(R.id.rightButton)
         val leftButton = findViewById<Button>(R.id.leftButton)
 
@@ -74,7 +72,7 @@ class ControlArm : AppCompatActivity() {
         val id6Json = JSONObject(id6)
 
         No1.setOnClickListener{
-            publish("NTUT/MQTT","$id1Json")
+            mqtt.publish("NTUT/MQTT","$id1Json")
             rightButton.text = "右"
             leftButton.text = "左"
             angleSeekbar?.setProgress(angle1)
@@ -82,7 +80,7 @@ class ControlArm : AppCompatActivity() {
             id = 1
         }
         No2.setOnClickListener{
-            publish("NTUT/MQTT","$id2Json")
+            mqtt.publish("NTUT/MQTT","$id2Json")
             rightButton.text = "上"
             leftButton.text = "下"
             angleSeekbar?.setProgress(angle2)
@@ -90,7 +88,7 @@ class ControlArm : AppCompatActivity() {
             id = 2
         }
         No3.setOnClickListener{
-            publish("NTUT/MQTT","$id3Json")
+            mqtt.publish("NTUT/MQTT","$id3Json")
             rightButton.text = "上"
             leftButton.text = "下"
             angleSeekbar?.setProgress(angle3)
@@ -98,7 +96,7 @@ class ControlArm : AppCompatActivity() {
             id = 3
         }
         No4.setOnClickListener{
-            publish("NTUT/MQTT","$id4Json")
+            mqtt.publish("NTUT/MQTT","$id4Json")
             rightButton.text = "上"
             leftButton.text = "下"
             angleSeekbar?.setProgress(angle4)
@@ -106,7 +104,7 @@ class ControlArm : AppCompatActivity() {
             id = 4
         }
         No5.setOnClickListener{
-            publish("NTUT/MQTT","$id5Json")
+            mqtt.publish("NTUT/MQTT","$id5Json")
             rightButton.text = "右"
             leftButton.text = "左"
             angleSeekbar?.setProgress(angle5)
@@ -114,7 +112,7 @@ class ControlArm : AppCompatActivity() {
             id = 5
         }
         No6.setOnClickListener{
-            publish("NTUT/MQTT","$id6Json")
+            mqtt.publish("NTUT/MQTT","$id6Json")
             rightButton.text = "抓"
             leftButton.text = "鬆"
             angleSeekbar?.setProgress(angle6)
@@ -124,7 +122,7 @@ class ControlArm : AppCompatActivity() {
 
         val midden = findViewById<Button>(R.id.midden) //置中
         midden.setOnClickListener {
-            publish("NTUT/MQTT","{\"mid\":0}")
+            mqtt.publish("NTUT/MQTT","{\"mid\":0}")
             angleSeekbar!!.setProgress(90)
         }
 
@@ -146,7 +144,7 @@ class ControlArm : AppCompatActivity() {
                 angleView.setText("當前角度:" + progress+"度")
                 val angle = "{'angle' : $progress }"
                 val angleJson = JSONObject(angle)
-                publish("NTUT/MQTT","$angleJson")
+                mqtt.publish("NTUT/MQTT","$angleJson")
 
                 return when(id){
                     1 -> angle1 = progress
