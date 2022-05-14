@@ -186,14 +186,28 @@ class Adapter(private val data: ArrayList<Contact>):
         }
 
         //顯示資訊函數
-        fun showDialog(objectt :JSONArray) {
+        fun showDialog(objectt :JSONArray, updatedAt :String) {
             if(objectt.isNull(0)){
                 Handler(Looper.getMainLooper()).post{
                     Toast.makeText(deleteContext, "沒有資訊", Toast.LENGTH_SHORT).show()
                 }
             }else {
+                //取得偵測到的物件數量
+                val number = objectt.length() - 1
+                //建立一個可空陣列，存放物件資料
+                val array = arrayOfNulls<String>(objectt.length())
+                //將可空陣列加入物件資料
+                for (i in 0..number){
+                    array.set(i,"${objectt[i]}")
+                }
+                //每個元素前面加上物件兩字
+                array.forEachIndexed { index, data ->
+                    array[index] = "物件：${data}"
+                }
+
                 AlertDialog.Builder(clickContext)
-                    .setMessage("${objectt[0]}\t\t\t${objectt[1]}\t\t\t${objectt[2]}\t\t\t${objectt[3]}")
+                    .setTitle("監視器捕捉到的物件\n最後更新時間:$updatedAt")
+                    .setItems(array,null)
                     .setPositiveButton("確認") { _, _ ->
                         return@setPositiveButton
                     }.show()
@@ -216,6 +230,7 @@ class Adapter(private val data: ArrayList<Contact>):
                     val json = JSONObject(res.toString())
                     val data = json.getJSONObject("data")
                     val objectt = data.getJSONArray("object")
+                    val updatedAt = data.getString("updatedAt")
 
                     when(json.getInt("status")){
                         200 -> {
@@ -225,7 +240,8 @@ class Adapter(private val data: ArrayList<Contact>):
                                     json.getString("message"),
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                showDialog(objectt)
+                                //顯示資訊
+                                showDialog(objectt,updatedAt)
                             }
                         }
                     }

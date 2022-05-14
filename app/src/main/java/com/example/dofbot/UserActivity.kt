@@ -141,63 +141,66 @@ class UserActivity : AppCompatActivity() {
                 .setTitle("請輸入ID")
                 .setView(userJoinHome)
                 .setPositiveButton("確認"){ dialog, which ->
-                    //輸入完的id存放到變數
-                    val keyId = joinHomeId.text.toString()
+                    if (joinHomeId.length() < 1){
+                        showToast("請輸入ID")
+                    }else{
+                        //輸入完的id存放到變數
+                        val keyId = joinHomeId.text.toString()
 
-                    //body building
-                    val type = "application/json; charset=utf-8".toMediaTypeOrNull()
-                    val param = "{}"
-                    val body = param.toRequestBody(type)
+                        //body building
+                        val type = "application/json; charset=utf-8".toMediaTypeOrNull()
+                        val param = "{}"
+                        val body = param.toRequestBody(type)
 
-                    //向server發出request
-                    val url = "http://35.77.46.57:3000/home/join/$keyId"
-                    val request = Request.Builder()
-                        .url(url)
-                        //送出token
-                        .addHeader("token",c.getString(1))
-                        .patch(body)
-                        .build()
+                        //向server發出request
+                        val url = "http://35.77.46.57:3000/home/join/$keyId"
+                        val request = Request.Builder()
+                            .url(url)
+                            //送出token
+                            .addHeader("token",c.getString(1))
+                            .patch(body)
+                            .build()
 
-                    //server response
-                    OkHttpClient.Builder().build().newCall(request).enqueue(object : Callback{
-                        override fun onResponse(call: Call, response: Response) {
-                            val res = response.body?.string()
-                            val json = JSONObject(res.toString())
+                        //server response
+                        OkHttpClient.Builder().build().newCall(request).enqueue(object : Callback{
+                            override fun onResponse(call: Call, response: Response) {
+                                val res = response.body?.string()
+                                val json = JSONObject(res.toString())
 
-                            if(json.has("data")){
-                                val data = json.getJSONObject("data")
-                                val homeName = data.getString("name")
+                                if(json.has("data")){
+                                    val data = json.getJSONObject("data")
+                                    val homeName = data.getString("name")
 
-                                when (json.getInt("status")) {
-                                    201 -> {
-                                        //join success
-                                        showToast(json.getString("message"))
-                                        //建立listview
-                                        createList(homeName,keyId)
-                                        //更新頁面
-                                        GlobalScope.launch(Dispatchers.Main) {
-                                            //隱藏元件
-                                            //findViewById<ImageView>(R.id.deleteHome).setVisibility(View.GONE)
-                                            adapter.notifyDataSetChanged()
+                                    when (json.getInt("status")) {
+                                        201 -> {
+                                            //join success
+                                            showToast(json.getString("message"))
+                                            //建立listview
+                                            createList(homeName,keyId)
+                                            //更新頁面
+                                            GlobalScope.launch(Dispatchers.Main) {
+                                                //隱藏元件
+                                                //findViewById<ImageView>(R.id.deleteHome).setVisibility(View.GONE)
+                                                adapter.notifyDataSetChanged()
+                                            }
                                         }
                                     }
+                                }else{
+                                    when(json.getInt("status")){
+                                        //id error & home already joined
+                                        400 -> showToast(json.getString("message"))
+                                    }
                                 }
-                            }else{
-                                when(json.getInt("status")){
-                                    //id error & home already joined
-                                    400 -> showToast(json.getString("message"))
-                                }
+
+                                Log.e("server","$json")
+                                Log.e("token",c.getString(1))
                             }
 
-                            Log.e("server","$json")
-                            Log.e("token",c.getString(1))
-                        }
-
-                        override fun onFailure(call: Call, e: IOException) {
-                            showToast("請求失敗")
-                        }
-                    })
-
+                            override fun onFailure(call: Call, e: IOException) {
+                                showToast("請求失敗")
+                            }
+                        })
+                    }
                 }.create().show()
         }
 
