@@ -204,7 +204,7 @@ class Adapter(private val data: ArrayList<Contact>):
                 array.forEachIndexed { index, data ->
                     array[index] = "物件：${data}"
                 }
-
+                //顯示列表
                 AlertDialog.Builder(clickContext)
                     .setTitle("監視器捕捉到的物件\n最後更新時間:$updatedAt")
                     .setItems(array,null)
