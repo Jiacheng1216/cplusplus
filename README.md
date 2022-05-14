@@ -12,7 +12,7 @@
 <img width="185" alt="image" src="https://user-images.githubusercontent.com/88382512/168276349-67f49493-aceb-4edb-a3e1-285112fc3bd4.png">  
 
 點擊家庭取得資料  
-<img width="188" alt="image" src="https://user-images.githubusercontent.com/88382512/168276417-6e9c421a-dac7-4dc5-96a9-00baecd41179.png">  
+<img width="242" alt="image" src="https://user-images.githubusercontent.com/88382512/168439568-1b27da9f-7905-4b21-8b8b-ec4fbb43c943.png">  
 
 控制手臂介面  
 <img width="187" alt="image" src="https://user-images.githubusercontent.com/88382512/168276478-c431c940-008b-4075-899d-efb5193a7822.png">
